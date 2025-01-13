@@ -1,43 +1,49 @@
-import React, { useState } from 'react'
-import axios from 'axios';
+import axios from "axios";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 
-function AdminLogin() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+const AdminLogin = () => {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  console.log(email, password, "sjdfhkasjdhfkj");
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try{
-          const response= await axios.post('http://localhost:3000/api/admin/login',{
-        email:email,
-        password:password
-       })
-    
-       if(response.status===200){
-        const {token}=response.data
-        localStorage.setItem('token',token)
-        
-        // navigate('/dashboard')
-        // toast.success(`${response.data.message}`)
-        
-       }
-        }catch(error){
-          console.log('error to admin login',error);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/admin/login",
+        {
+          email: email,
+          password: password,
         }
-      
-        console.log('Email:', email, 'Password:', password);
-      };
-    
+      );
+
+      if (response.status === 200) {
+        const { token } = response.data;
+        localStorage.setItem("token", token);
+        navigate("/dashboard");
+        toast.success("Admin logged succesfully") 
+        
+      }
+    } catch (error) {
+      console.log("error to admin login", error);
+    }
+
+    console.log("Email:", email, "Password:", password);
+  };
 
   return (
-    <div>
-        <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-sm p-6 bg-white rounded-lg shadow-md">
         <h2 className="mb-6 text-2xl font-semibold text-center">Admin Login</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Email
+            </label>
             <input
               type="email"
               value={email}
@@ -48,7 +54,9 @@ function AdminLogin() {
             />
           </div>
           <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700">Password</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Password
+            </label>
             <input
               type="password"
               value={password}
@@ -67,8 +75,7 @@ function AdminLogin() {
         </form>
       </div>
     </div>
-    </div>
-  )
-}
+  );
+};
 
-export default AdminLogin
+export default AdminLogin;
