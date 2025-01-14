@@ -21,7 +21,7 @@ function Authors() {
   return (
     <div>
       <div className="text-center mb-8 p-6">
-      <h1 className=" right-8 font-bold text-3xl mb-4 bg-gray-200  p-2 border-b-2 border-white border-opacity-0 hover:border-opacity-100  hover:text-gray-400 duration-200 cursor-pointer active ">FEATURED AUTHORS</h1>
+      <h1 className=" right-8 font-bold text-3xl mb-4 bg-gray-200  p-2 border-b-2 border-white border-opacity-0 hover:border-opacity-100  hover:text-gray-400 duration-200 cursor-pointer active  text-sky-950">FEATURED AUTHORS</h1>
         
         </div>
       <div className="flex flex-wrap gap-20 justify-center p-3">

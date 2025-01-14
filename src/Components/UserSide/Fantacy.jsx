@@ -4,11 +4,13 @@ import { toast } from 'sonner';
 import Navbar from './Navbar';
 import Navbar2 from './Navbar2';
 import Footer from './Footer';
+import { useNavigate } from 'react-router-dom';
 
 function Fantacy() {
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1); // Current page
   const [itemsPerPage] = useState(10); // Number of items per page
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchFantasyBooks = async () => {
@@ -79,6 +81,7 @@ function Fantacy() {
                   src={item.image}
                   alt="Product"
                   className="w-full h-full object-cover rounded-t-lg"
+                  onClick={()=>navigate(`/detail/${item._id}`)}
                 />
               </div>
               {/* Borrow Button */}

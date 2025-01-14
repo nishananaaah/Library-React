@@ -21,6 +21,8 @@ import Mystery from './Components/UserSide/Mystery'
 import Romance from './Components/UserSide/Romance'
 import Fantacy from './Components/UserSide/Fantacy'
 import Allbooks from './Components/UserSide/Allbooks'
+import Membership from './Components/UserSide/Membership'
+import BookDetailpage from './Components/UserSide/BookDetailpage'
 
 
 function App() {
@@ -49,6 +51,8 @@ function App() {
       <Route path='romance' element={<Romance/>}/>
       <Route path='fantacy' element={<Fantacy/>}/>
       <Route path='categories'element={<Allbooks/>}/>
+      <Route path='membership' element={<Membership/>}/>
+      <Route path='detail/:productId' element={<BookDetailpage/>}/>
 
     </Routes>
 
