@@ -11,7 +11,7 @@ function Membership() {
   const userId = JSON.parse(localStorage.getItem("user"))?._id;
   const userName = JSON.parse(localStorage.getItem("user"))?.username;
   const token = localStorage.getItem("token");
-
+  console.log(userId)
   const memberships = [
     {
       name: "Silver",
@@ -105,7 +105,7 @@ function Membership() {
       const razorpay = new window.Razorpay(options);
       razorpay.open();
     } catch (err) {
-      toast.error("Checkout failed");
+      toast.error("Please Login");
       console.error(err);
     }
   };

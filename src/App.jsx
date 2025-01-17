@@ -23,6 +23,8 @@ import Fantacy from './Components/UserSide/Fantacy'
 import Allbooks from './Components/UserSide/Allbooks'
 import Membership from './Components/UserSide/Membership'
 import BookDetailpage from './Components/UserSide/BookDetailpage'
+import Blog from './Components/UserSide/Blog'
+import Profile from './Components/UserSide/Profile'
 
 
 function App() {
@@ -53,6 +55,8 @@ function App() {
       <Route path='categories'element={<Allbooks/>}/>
       <Route path='membership' element={<Membership/>}/>
       <Route path='detail/:productId' element={<BookDetailpage/>}/>
+      <Route path='blog' element={<Blog/>}/>
+      <Route path='profile' element={<Profile/>}/>
 
     </Routes>
 

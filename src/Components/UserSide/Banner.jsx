@@ -26,11 +26,11 @@ function HomePage() {
                 key={index}
                 className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition duration-300"
               >
-                <img
+                {/* <img
                   src={`https://source.unsplash.com/300x200/?books,reading,${index}`}
                   alt={`Blog ${index}`}
                   className="w-full rounded-lg mb-4"
-                />
+                /> */}
                 <h3 className="text-2xl font-bold text-gray-800 mb-2">
                   Blog Title {index + 1}
                 </h3>

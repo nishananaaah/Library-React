@@ -30,12 +30,14 @@ function Login() {
             if (response.status === 200) {
               const { token, user } = response.data;
         
-              console.log(token, "token", user, "user");
+              console.log(user, "userjhhhj");
         
               // Save token and user _id to localStorage
               localStorage.setItem('token', token); 
+              localStorage.setItem('user',JSON.stringify(user))
               localStorage.setItem('userId', user._id); // Store only the _id
               localStorage.setItem('username',user.username)
+              localStorage.setItem('image',user.image)
         
               navigate('/');
               toast.success('Login completed successfully');

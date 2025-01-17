@@ -25,11 +25,33 @@ function BookDetailPage() {
     fetchProduct();
   }, [productId]);
 
-  const handleBorrow = () => {
-    toast.success(`Book "${product?.name}" borrowed!`);
-    // Add your borrowing logic here (e.g., API call to update product status)
-  };
+  const handleBorrow = async (productId) => {
+    try {
+        // Ensure the user ID exists and is valid
+        const id = localStorage.getItem("user");
+        if (!id) {
+            toast.error("User is not logged in or ID is missing");
+            return;
+        }
+      
+        
+        const user = JSON.parse(id); // Parse user from localStorage
+        console.log("ss",user);
+        const userId = user._id;
+        
+        console.log("s,",userId);
+        if (!userId) {
+            toast.error("User ID is invalid");
+            return;
+        }
 
+        await axios.post(`http://localhost:3000/api/users/${userId}/borrow/${productId}`);
+        toast.success("Product Borrowed Successfully");
+    } catch (error) {
+        toast.error("Take Membership");
+        console.error("Error borrowing product:", error);
+    }
+};
   return (
     <div className="bg-gray-50 min-h-screen">
       <Navbar />

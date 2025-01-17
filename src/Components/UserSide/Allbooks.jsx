@@ -12,6 +12,8 @@ function Allbooks() {
   const [itemsPerPage, setItemsPerPage] = useState(10); // Number of books per page
   const navigate = useNavigate();
 
+
+
   useEffect(() => {
     const fetchBooks = async () => {
       try {
@@ -33,11 +35,6 @@ function Allbooks() {
   // Calculate total pages
   const totalPages = Math.ceil(products.length / itemsPerPage);
 
-  const handleBorrow = (productId) => {
-    toast.success(`Product with ID ${productId} borrowed!`);
-    // Add your borrowing logic here (e.g., API call to update product status)
-  };
-
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -53,6 +50,33 @@ function Allbooks() {
       setCurrentPage(currentPage - 1);
     }
   };
+  const handleBorrow = async (productId) => {
+    try {
+        // Ensure the user ID exists and is valid
+        const id = localStorage.getItem("user");
+        if (!id) {
+            toast.error("User is not logged in or ID is missing");
+            return;
+        }
+      
+        
+        const user = JSON.parse(id); // Parse user from localStorage
+        console.log("ss",user);
+        const userId = user._id;
+        
+        console.log("s,",userId);
+        if (!userId) {
+            toast.error("User ID is invalid");
+            return;
+        }
+
+        await axios.post(`http://localhost:3000/api/users/${userId}/borrow/${productId}`);
+        toast.success("Product Borrowed Successfully");
+    } catch (error) {
+        toast.error("Take Membership");
+        console.error("Error borrowing product:", error);
+    }
+};
 
   return (
     <div>
