@@ -34,11 +34,11 @@ const Navbar = () => {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate("/");
-    toast.success("Logout Successfully");
-  };
+  // const handleLogout = () => {
+  //   localStorage.clear();
+  //   navigate("/");
+  //   toast.success("Logout Successfully");
+  // };
 
   return (
     <nav className="bg-sky-950 text-white py-3 px-6 shadow-md">
@@ -98,7 +98,7 @@ const Navbar = () => {
         </div>{" "}
         <button
           onClick={() => navigate("/membership")}
-          className="bg-gray-700 px-4 py-2 rounded-md hover:bg-gray-600"
+          className="bg-gradient-to-r from-sky-950 to-sky-600 px-4 py-2 rounded-md hover:bg-gray-600"
         >
           Membership
         </button>
@@ -159,14 +159,14 @@ const Navbar = () => {
                       Your-profile 
                       </NavLink>
                     </li>
-                    <li>
+                    {/* <li>
                       <button
                         onClick={handleLogout}
                         className="block px-4 py-2 w-full text-left text-red-600 hover:bg-gray-100 font-semibold"
                       >
                         Logout
                       </button>
-                    </li>
+                    </li> */}
                   </>
                 )}
               </ul>

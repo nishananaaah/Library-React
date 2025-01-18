@@ -14,7 +14,7 @@ function Sidebar() {
                   <li className="my-2">
                     <Link
                       to="/dashboard"
-                      className="block p-2 rounded hover:bg-sky-900"
+                      className="block p-2 rounded hover:bg-sky-950"
                     >
                   DASHBOARD
                     </Link>
@@ -23,7 +23,7 @@ function Sidebar() {
                   <li className="my-2">
                     <Link
                       to="/productsection"
-                      className="block p-2 rounded hover:bg-sky-900"
+                      className="block p-2 rounded hover:bg-sky-950"
                     >
                       PRODUCTS
                     </Link>
@@ -32,7 +32,7 @@ function Sidebar() {
                   <li className="my-2">
                     <Link
                       to="/users"
-                      className="block p-2 rounded hover:bg-sky-900"
+                      className="block p-2 rounded hover:bg-sky-950"
                     >
                       USERS
                     </Link>
@@ -41,7 +41,7 @@ function Sidebar() {
                   <li className="my-2">
                     <Link
                       to="/members"
-                      className="block p-2 rounded hover:bg-sky-900"
+                      className="block p-2 rounded hover:bg-sky-950"
                     >
                       MEMBERS
                     </Link>
@@ -51,7 +51,7 @@ function Sidebar() {
                   <li className="my-2">   
                     <Link
                       to="/borrows"
-                      className="block p-2 rounded hover:bg-sky-900"
+                      className="block p-2 rounded hover:bg-sky-950"
                     >
                      BORROWS
                     </Link>
@@ -59,7 +59,7 @@ function Sidebar() {
                   <li className="my-2">
                     <Link
                       to="/reviews"
-                      className="block p-2 rounded hover:bg-sky-900"
+                      className="block p-2 rounded hover:bg-sky-950"
                     >
                      REVIEWS
                     </Link>

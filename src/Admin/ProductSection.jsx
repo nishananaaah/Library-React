@@ -20,7 +20,10 @@ function ProductSection() {
   const [editmode, setEditmode] = useState(false);
   const [modelopen, setModelopen] = useState(false);
   const [loading, setLoading] = useState(false);
-  console.log(products, "productssssssssssss");
+
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 5;
 
   const fetchProducts = async () => {
     try {
@@ -36,6 +39,7 @@ function ProductSection() {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -47,8 +51,8 @@ function ProductSection() {
       [name]: value,
     }));
   };
+
   const handleSaveProduct = async () => {
-    // Client-side validation to check that required fields are filled
     if (
       !formdata.name ||
       !formdata.author ||
@@ -62,7 +66,6 @@ function ProductSection() {
     const { _id, ...data } = formdata;
     try {
       if (editmode) {
-        // Edit existing product
         await axios.put(
           `http://localhost:3000/api/admin/products/edit/${_id}`,
           data
@@ -74,7 +77,6 @@ function ProductSection() {
         );
         toast.success("Product updated successfully!");
       } else {
-        // Add new product
         const response = await axios.post(
           "http://localhost:3000/api/admin/addProduct",
           data
@@ -89,7 +91,6 @@ function ProductSection() {
     }
   };
 
-  //Delete product
   const handleDeleteProduct = async (_id) => {
     try {
       await axios.delete(
@@ -122,6 +123,18 @@ function ProductSection() {
     setEditmode(false);
     setModelopen(false);
   };
+
+  // Pagination Logic
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
+
+  const totalPages = Math.ceil(products.length / productsPerPage);
+
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <AdminNavbar />
@@ -142,48 +155,75 @@ function ProductSection() {
 
           {/* Product List */}
           <div className="bg-white shadow-md rounded-lg overflow-hidden">
-            <table className="min-w-full table-auto">
-              <thead className="bg-gray-200 text-gray-600">
-                <tr>
-                  <th className="py-3 px-4 text-left">Name</th>
-                  <th className="py-3 px-4 text-left">Author</th>
-                  <th className="py-3 px-4 text-left">Category</th>
-                  <th className="py-3 px-4 text-left">Price</th>
-                </tr>
-              </thead>
-              <tbody>
-                {loading ? (
-                  <tr>
-                    <td colSpan={4} className="text-center py-6">
-                      Loading...
-                    </td>
-                  </tr>
-                ) : (
-                  products?.map((product) => (
-                    <tr key={product?._id} className="hover:bg-gray-100">
-                      <td className="py-3 px-4">{product?.name}</td>
-                      <td className="py-3 px-4">{product?.author}</td>
-                      <td className="py-3 px-4">{product?.category}</td>
-                      <td className="py-3 px-4">${product?.price}</td>
-                      <td className="py-3 px-4 flex gap-2">
-                        <button
-                          onClick={() => handleEditClick(product)}
-                          className="text-blue-500 hover:text-blue-600"
-                        >
-                          <CiEdit />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteProduct(product._id)}
-                          className="text-red-500 hover:text-red-600"
-                        >
-                          <MdDelete />
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+  <table className="min-w-full table-auto">
+    <thead className="bg-gray-200 text-gray-600">
+      <tr>
+        <th className="py-3 px-4 text-left">Image</th>
+        <th className="py-3 px-4 text-left">Name</th>
+        <th className="py-3 px-4 text-left">Author</th>
+        <th className="py-3 px-4 text-left">Category</th>
+        <th className="py-3 px-4 text-left">Price</th>
+        <th className="py-3 px-4 text-left">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {loading ? (
+        <tr>
+          <td colSpan={6} className="text-center py-6">
+            Loading...
+          </td>
+        </tr>
+      ) : (
+        currentProducts?.map((product) => (
+          <tr key={product?._id} className="hover:bg-gray-100">
+            <td className="py-3 px-4">
+              <img
+                src={product?.image}
+                alt={product?.name}
+                className="w-16 h-16 object-cover rounded-md"
+              />
+            </td>
+            <td className="py-3 px-4">{product?.name}</td>
+            <td className="py-3 px-4">{product?.author}</td>
+            <td className="py-3 px-4">{product?.category}</td>
+            <td className="py-3 px-4">${product?.price}</td>
+            <td className="py-3 px-4 flex gap-2">
+              <button
+                onClick={() => handleEditClick(product)}
+                className="text-blue-500 hover:text-blue-600"
+              >
+                <CiEdit />
+              </button>
+              <button
+                onClick={() => handleDeleteProduct(product._id)}
+                className="text-red-500 hover:text-red-600"
+              >
+                <MdDelete />
+              </button>
+            </td>
+          </tr>
+        ))
+      )}
+    </tbody>
+  </table>
+</div>
+
+
+          {/* Pagination */}
+          <div className="flex justify-center mt-4">
+            {[...Array(totalPages)].map((_, index) => (
+              <button
+                key={index}
+                onClick={() => paginate(index + 1)}
+                className={`px-4 py-2 mx-1 rounded-md ${
+                  currentPage === index + 1
+                    ? "bg-sky-950 text-white"
+                    : "bg-gray-200 text-gray-600"
+                }`}
+              >
+                {index + 1}
+              </button>
+            ))}
           </div>
 
           {/* Modal */}
@@ -203,24 +243,13 @@ function ProductSection() {
                 </div>
                 <div className="p-4">
                   <form className="space-y-4">
-                    {[
-                      "name",
-                      "description",
-                      "category",
-                      "price",
-                      "image",
-                      "author",
-                    ].map((field) => (
+                    {[ "name", "description", "category", "price", "image", "author",].map((field) => (
                       <div key={field}>
                         <label className="block text-sm font-medium text-gray-700 capitalize">
                           {field}
                         </label>
                         <input
-                          type={
-                            field === "price" || field === "quantity"
-                              ? "number"
-                              : "text"
-                          }
+                          type={field === "price" ? "number" : "text"}
                           name={field}
                           value={formdata[field]}
                           onChange={handleInputChange}
@@ -256,3 +285,4 @@ function ProductSection() {
 }
 
 export default ProductSection;
+

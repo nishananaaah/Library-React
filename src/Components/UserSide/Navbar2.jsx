@@ -1,7 +1,8 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 function Navbar2() {
+  const navigate  = useNavigate();
   return (
     <div className=" text-sky-950 py-4 shadow-sm">
     <div className="max-w-7xl mx-auto flex justify-center space-x-16">
@@ -52,13 +53,21 @@ function Navbar2() {
       >
         BLOG
       </Link>
-      <Link
+      {/* <Link
         to="/yourborrows"
         className="hover:text-gray-600 text-sm font-semibold"
       >
         YOUR-BORROWS
       </Link>
-    
+     */}
+    <button
+  className="bg-gradient-to-r from-sky-950 to-sky-600 text-white font-bold px-1 rounded-lg shadow-md hover:bg-sky-800"
+  onClick={() => navigate("/yourborrows")}
+>
+  YOUR BORROWS
+</button>
+
+
     </div>
   </div>
   )

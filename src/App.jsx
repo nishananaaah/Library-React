@@ -26,6 +26,8 @@ import BookDetailpage from './Components/UserSide/BookDetailpage'
 import Blog from './Components/UserSide/Blog'
 import Profile from './Components/UserSide/Profile'
 import UserBorrows from './Components/UserSide/UserBorrows'
+import About from './Components/UserSide/About'
+import Contact from './Components/UserSide/Contact'
 
 
 
@@ -60,6 +62,8 @@ function App() {
       <Route path='blog' element={<Blog/>}/>
       <Route path='profile' element={<Profile/>}/>
       <Route  path='yourborrows'element={<UserBorrows/>}/>
+      <Route  path='about' element={<About/>}/>
+      <Route  path='contact' element={<Contact/>}/>
 
     </Routes>
 
