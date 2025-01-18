@@ -1,55 +1,36 @@
-import  { useEffect, useState } from 'react'
-import AdminNavbar from './AdminNavbar'
-import Sidebar from './Sidebar'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios';
+import { toast } from 'sonner';
+import Navbar from './Navbar';
+import Navbar2 from './Navbar2';
+import Footer from './Footer';
 
-function Borrows() {
-  const [borrows,setBorrows] = useState([]);
-  // const [products,setProducts] =useState([]);
-  console.log(borrows,'nisssssss')
+function UserBorrows() {
+    const [borrows,setBorrow] = useState([]);
+    const user = JSON.parse(localStorage.getItem("user"));
+    const userId = user._id;
 
-  useEffect(()=>{
-    const fetchBorrows = async()=>{
-      try {
-        const response  = await axios.get('http://localhost:3000/api/admin/viewAllborrows')
-      setBorrows(response?.data || [])
-        
-       } catch (error) {
-        console.log("failed to load borrows",error)
-
-          
-        
-       }
-      
-    }
-    fetchBorrows()
-  
-  },[])
-  // useEffect(()=>{
-  //   const fetchProducts = async()=>{
-  //     try {
-  //       const response = await axios.get('http://localhost:3000/api/admin/products')
-  //         setProducts(response?.data)
-  //     } catch (error) {
-  //       console.log("failed to load products",error)
-        
-  //     }
-  //   }
-  //   fetchProducts()
-  // },[])
-  
+    useEffect(()=>{
+        const fetchBorrow = async ()=>{
+            try {
+                const response = await axios.get(`http://localhost:3000/api/users/borrow/${userId}`)
+                setBorrow(response?.data?.borrow)
+                console.log(borrows,'bsssssssssssss')
+            } catch (error) {
+              console.log("Failed to load borrows",error);
+              toast.error("Failed to fetch Borrow")
+              
+                
+            }
+        }
+        fetchBorrow();
+    },[userId])
   return (
     <div>
-      <AdminNavbar />
-      <div className="flex">
-        <Sidebar />
-        <div className="p-8 bg-gray-100 min-h-screen flex-1">
-          <h1 className="text-3xl font-bold text-gray-800 mb-6">Borrows</h1>
-          {borrows.length === 0 ? (
-            <p className="text-gray-600">No Borrows found.</p>
-          ) : (
-            <div className="space-y-6">
-              {borrows.map((borrow, index) => (
+      <Navbar/>
+      <Navbar2/>
+         <div className="space-y-6">
+              {borrows?.map((borrow, index) => (
                 <div key={borrow._id} className="bg-white p-6 rounded-lg shadow-md">
                   <h2 className="text-xl font-semibold text-gray-700 mb-4">
                     Borrow #{index + 1} 
@@ -64,11 +45,11 @@ function Borrows() {
                   <div className="mb-4">
                     <h3 className="text-lg font-medium text-gray-600 mb-2">Product:</h3>
                     <ul className="space-y-3">
-                      {borrow.productId?.map((product) => (
+                      {borrow?.productId?.map((product) => (
                         
-                        <li key={product._id} className="flex items-start gap-4 border-b border-gray-200 pb-2">
+                        <li key={product?._id} className="flex items-start gap-4 border-b border-gray-200 pb-2">
                           <img
-                            src={product.image}
+                            src={product?.image}
                             alt={product.name}
                             className="w-16 h-16 object-cover rounded-md border border-gray-300"
                           />
@@ -93,12 +74,10 @@ function Borrows() {
                   </div>
                 </div>
               ))}
-            </div>
-          )}
-        </div>
-      </div>
+              </div>
+              <Footer/>
     </div>
-  );
+  )
 }
 
-export default Borrows
+export default UserBorrows

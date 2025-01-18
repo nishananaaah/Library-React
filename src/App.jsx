@@ -25,6 +25,8 @@ import Membership from './Components/UserSide/Membership'
 import BookDetailpage from './Components/UserSide/BookDetailpage'
 import Blog from './Components/UserSide/Blog'
 import Profile from './Components/UserSide/Profile'
+import UserBorrows from './Components/UserSide/UserBorrows'
+
 
 
 function App() {
@@ -57,6 +59,7 @@ function App() {
       <Route path='detail/:productId' element={<BookDetailpage/>}/>
       <Route path='blog' element={<Blog/>}/>
       <Route path='profile' element={<Profile/>}/>
+      <Route  path='yourborrows'element={<UserBorrows/>}/>
 
     </Routes>
 

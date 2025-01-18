@@ -52,6 +52,13 @@ function Navbar2() {
       >
         BLOG
       </Link>
+      <Link
+        to="/yourborrows"
+        className="hover:text-gray-600 text-sm font-semibold"
+      >
+        YOUR-BORROWS
+      </Link>
+    
     </div>
   </div>
   )
