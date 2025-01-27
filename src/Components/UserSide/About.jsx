@@ -14,7 +14,7 @@ function About() {
         <div className="max-w-6xl mx-auto px-6">
           {/* Header */}
           <h1 className="text-4xl font-bold text-sky-950 text-center mb-6">
-            About Our Book Borrowing Platform
+            About Our BOOKRED
           </h1>
           <p className="text-center text-gray-700 text-lg mb-10">
             Empowering readers to explore, borrow, and share their love for books.
@@ -28,7 +28,7 @@ function About() {
                 Discover Your Next Adventure
               </h2>
               <p className="text-gray-600 mb-4 leading-relaxed">
-                Welcome to our book borrowing platform! Our mission is to make books accessible to
+                Welcome to our BOOKRED Our mission is to make books accessible to
                 everyone by offering a wide collection of genres, from timeless classics to
                 contemporary bestsellers. Whether you're a student, an avid reader, or someone
                 looking to explore new ideas, we provide a seamless way to borrow and enjoy books.

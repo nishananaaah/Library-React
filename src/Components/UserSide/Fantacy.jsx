@@ -13,51 +13,95 @@ function Fantacy() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchFantasyBooks = async () => {
+    const fetchBooks = async () => {
       try {
         const response = await axios.get('http://localhost:3000/api/users/products');
         setProducts(response.data.data);
       } catch (error) {
-        console.log('Failed to load fantasy books', error);
-        toast.error('Failed to load fantasy books');
+        console.log('Failed to load mystery books', error);
+        toast.error('Failed to load mystery books');
       }
     };
-    fetchFantasyBooks();
+    fetchBooks();
   }, []);
 
   const handleBorrow = async (productId) => {
     try {
-        // Ensure the user ID exists and is valid
-        const id = localStorage.getItem("user");
-        if (!id) {
-            toast.error("User is not logged please login!");
-            return;
-        }
-      
-        
-        const user = JSON.parse(id); // Parse user from localStorage
-        console.log("ss",user);
-        const userId = user._id;
-        
-        console.log("s,",userId);
-        if (!userId) {
-            toast.error("User ID is invalid");
-            return;
-        }
-
-        await axios.post(`http://localhost:3000/api/users/${userId}/borrow/${productId}`);
-        toast.success("Product Borrowed Successfully");
+      const id = localStorage.getItem('user');
+      if (!id) {
+        toast.error('User is not logged in. Please login!');
+        return;
+      }
+  
+      const user = JSON.parse(id); // Parse user from localStorage
+      const userId = user._id;
+  
+      if (!userId) {
+        toast.error('User ID is invalid');
+        return;
+      }
+  
+      const product = products.find((item) => item._id === productId);
+  
+      if (product.isBorrowed) {
+        toast.success('This product is already borrowed. Not Available.');
+        return;
+      }
+  
+      await axios.post(`http://localhost:3000/api/users/${userId}/borrow/${productId}`);
+      toast.success('Product Borrowed Successfully');
+      updateProductStatus(productId, true); // Update local product status
+  
+      // Optionally, refresh the product list from the server if needed
+      // const response = await axios.get('http://localhost:3000/api/users/products');
+      // setProducts(response.data.data); // Refresh the product list
+  
     } catch (error) {
-        toast.error("Take Membership");
-        console.error("Error borrowing product:", error);
+      toast.error('Take Membership');
+      console.error('Error borrowing product:', error);
     }
-};
+  };
+  
+
+  const handleUnborrow = async (productId) => {
+    try {
+      const id = localStorage.getItem('user');
+      if (!id) {
+        toast.error('User is not logged in. Please login!');
+        return;
+      }
+
+      const user = JSON.parse(id);
+      const userId = user._id;
+
+      if (!userId) {
+        toast.error('User ID is invalid');
+        return;
+      }
+
+      await axios.post(`http://localhost:3000/api/users/${userId}/unborrow/${productId}`);
+      toast.success('Product Returned Successfully');
+      updateProductStatus(productId, false); // Update local product status
+    } catch (error) {
+      toast.error('Error returning the product');
+      console.error('Error unborrowing product:', error);
+    }
+  };
+
+  // Update product's borrowed status locally
+  const updateProductStatus = (productId, isBorrowed) => {
+    setProducts((prevProducts) =>
+      prevProducts.map((product) =>
+        product._id === productId ? { ...product, isBorrowed } : product
+      )
+    );
+  };
 
   // Pagination Logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = products
-    .filter((item) => item.category === 'fantasy') // Filter by fantasy category
+    .filter((item) => item.category === 'fantasy') // Filter by mystery category
     .slice(indexOfFirstItem, indexOfLastItem);
 
   const totalPages = Math.ceil(
@@ -92,33 +136,43 @@ function Fantacy() {
         </h1>
       </div>
       <div className="flex flex-wrap gap-20 justify-center p-3">
-        {currentItems.map((item, index) => {
-          return (
-            <div
-              key={index}
-              className="w-48 bg-white shadow-md rounded-lg overflow-hidden duration-500 hover:scale-105 hover:shadow-xl"
-            >
-              {/* Image */}
-              <div className="w-full h-56">
-                <img
-                  src={item.image}
-                  alt="Product"
-                  className="w-full h-full object-cover rounded-t-lg"
-                  onClick={()=>navigate(`/detail/${item._id}`)}
-                />
-              </div>
-              {/* Borrow Button */}
-              <div className="p-3 text-center">
+        {currentItems.map((item, index) => (
+          <div
+            key={index}
+            className="w-48 bg-white shadow-md rounded-lg overflow-hidden duration-500 hover:scale-105 hover:shadow-xl"
+          >
+            {/* Image */}
+            <div className="w-full h-56">
+              <img
+                src={item.image}
+                alt="Product"
+                className="w-full h-full object-cover rounded-t-lg"
+                onClick={() => navigate(`/detail/${item._id}`)}
+              />
+            </div>
+            {/* Borrow and Unborrow Buttons */}
+            <div className="p-3 text-center">
+              {item.isBorrowed ? (
+                <>
+                  <p className="text-red-500 font-bold mb-2">Not Available</p>
+                  <button
+                    onClick={() => handleUnborrow(item._id)}
+                    className="bg-red-500 text-white font-bold py-2 px-4 rounded shadow-lg hover:bg-red-700 transition duration-200 transform hover:scale-105"
+                  >
+                    UNBORROW
+                  </button>
+                </>
+              ) : (
                 <button
                   onClick={() => handleBorrow(item._id)}
                   className="bg-sky-950 text-white font-bold py-2 px-4 rounded shadow-lg hover:bg-sky-800 transition duration-200 transform hover:scale-105"
                 >
                   BORROW
                 </button>
-              </div>
+              )}
             </div>
-          );
-        })}
+          </div>
+        ))}
       </div>
 
       {/* Pagination Controls */}
@@ -158,6 +212,5 @@ function Fantacy() {
     </div>
   );
 }
-
 export default Fantacy;
 

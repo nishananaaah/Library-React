@@ -28,7 +28,8 @@ const Navbar = () => {
       const response = await axios.get(
         `http://localhost:3000/api/users/search?query=${query}`
       );
-      setResults(response.data);
+      setResults(response?.data?.data);
+      console.log(response.data,"thissss")
     } catch (error) {
       console.error("Error fetching search results:", error);
     }
@@ -156,7 +157,7 @@ const Navbar = () => {
                         to="/profile"
                         className="block px-4 py-2 hover:bg-gray-100 text-sky-950 font-semibold"
                       >
-                      Your-profile 
+                       Your Profile
                       </NavLink>
                     </li>
                     {/* <li>

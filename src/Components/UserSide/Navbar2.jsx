@@ -64,7 +64,7 @@ function Navbar2() {
   className="bg-gradient-to-r from-sky-950 to-sky-600 text-white font-bold px-1 rounded-lg shadow-md hover:bg-sky-800"
   onClick={() => navigate("/yourborrows")}
 >
-  YOUR BORROWS
+  BORROWS
 </button>
 
 

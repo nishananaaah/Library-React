@@ -56,14 +56,14 @@ function Sidebar() {
                      BORROWS
                     </Link>
                   </li>
-                  <li className="my-2">
+                  {/* <li className="my-2">
                     <Link
                       to="/reviews"
                       className="block p-2 rounded hover:bg-sky-950"
                     >
                      REVIEWS
                     </Link>
-                  </li>
+                  </li> */}
                 </ul>
               </nav>
             </div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import Navbar2 from "./Navbar2";
 import Footer from "./Footer";
@@ -11,38 +11,24 @@ function Membership() {
   const userId = JSON.parse(localStorage.getItem("user"))?._id;
   const userName = JSON.parse(localStorage.getItem("user"))?.username;
   const token = localStorage.getItem("token");
-  console.log(userId)
-  const memberships = [
-    {
-      name: "Silver",
-      price: 100, // Razorpay amount is in paise (e.g., ₹100 = 10000 paise)
-      features: ["Access to 10 books per month", "Standard Support", "No Ads"],
-      bgColor: "bg-gradient-to-r from-gray-200 to-gray-300",
-    },
-    {
-      name: "Gold",
-      price: 200,
-      features: [
-        "Access to 20 books per month",
-        "Priority Support",
-        "Ad-Free Experience",
-        "Exclusive Discounts",
-      ],
-      bgColor: "bg-gradient-to-r from-yellow-400 to-yellow-300",
-    },
-    {
-      name: "Platinum",
-      price: 300,
-      features: [
-        "Unlimited Access to Books",
-        "24/7 Premium Support",
-        "Ad-Free Experience",
-        "Exclusive Discounts",
-        "Early Access to New Releases",
-      ],
-      bgColor: "bg-gradient-to-r from-blue-400 to-blue-500",
-    },
-  ];
+  const [membership,setMembership] = useState([])
+
+
+  useEffect(()=>{
+
+const fetchmembership = async()=>{
+  try {
+    const response = await axios.get('http://localhost:3000/api/users/getmembership')
+    setMembership(response.data)
+  } catch (error) {
+    console.log("failed to fetch membership",error)
+    toast.error("Membership")
+    
+  }
+}
+fetchmembership()
+ },[])
+
 
   // Razorpay Payment Handler
   const handlePayment = async (membership) => {
@@ -120,7 +106,7 @@ function Membership() {
         </h1>
 
         <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-          {memberships.map((membership, index) => (
+          {membership.map((membership, index) => (
             <div
               key={index}
               className={`${membership.bgColor} p-8 rounded-2xl shadow-2xl transform transition duration-300 hover:scale-105 hover:shadow-xl`}

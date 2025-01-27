@@ -8,6 +8,8 @@ import Sidebar from "./Sidebar";
 
 function ProductSection() {
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("All");
   const [formdata, setFormdata] = useState({
     _id: "",
     name: "",
@@ -20,6 +22,7 @@ function ProductSection() {
   const [editmode, setEditmode] = useState(false);
   const [modelopen, setModelopen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(null);
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
@@ -32,6 +35,12 @@ function ProductSection() {
         "http://localhost:3000/api/admin/products"
       );
       setProducts(response.data.data);
+      // Extract unique categories
+      const uniqueCategories = [
+        "All",
+        ...new Set(response.data.data.map((product) => product.category)),
+      ];
+      setCategories(uniqueCategories);
     } catch (error) {
       console.log("Failed to load products", error);
       toast.error("Failed to load products");
@@ -91,13 +100,16 @@ function ProductSection() {
     }
   };
 
-  const handleDeleteProduct = async (_id) => {
+  const handleDeleteProduct = async () => {
     try {
       await axios.delete(
-        `http://localhost:3000/api/admin/products/delete/${_id}`
+        `http://localhost:3000/api/admin/products/delete/${confirmDelete}`
       );
-      setProducts((prev) => prev.filter((product) => product._id !== _id));
+      setProducts((prev) =>
+        prev.filter((product) => product._id !== confirmDelete)
+      );
       toast.success("Product deleted successfully!");
+      setConfirmDelete(null);
     } catch (error) {
       console.error("Error deleting product:", error);
       toast.error("Failed to delete product!");
@@ -124,12 +136,21 @@ function ProductSection() {
     setModelopen(false);
   };
 
+  // Filter products by category
+  const filteredProducts =
+    selectedCategory === "All"
+      ? products
+      : products.filter((product) => product.category === selectedCategory);
+
   // Pagination Logic
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
+  const currentProducts = filteredProducts.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
 
-  const totalPages = Math.ceil(products.length / productsPerPage);
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
 
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -144,7 +165,18 @@ function ProductSection() {
           <h1 className="text-4xl font-bold text-gray-800 mb-6">
             Product Management
           </h1>
-          <div className="flex justify-end mb-4">
+          <div className="flex justify-between mb-4">
+            <select
+              className="border border-gray-300 rounded-md px-4 py-2"
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+            >
+              {categories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
             <button
               onClick={() => setModelopen(true)}
               className="bg-green-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-green-700 focus:outline-none"
@@ -155,59 +187,83 @@ function ProductSection() {
 
           {/* Product List */}
           <div className="bg-white shadow-md rounded-lg overflow-hidden">
-  <table className="min-w-full table-auto">
-    <thead className="bg-gray-200 text-gray-600">
-      <tr>
-        <th className="py-3 px-4 text-left">Image</th>
-        <th className="py-3 px-4 text-left">Name</th>
-        <th className="py-3 px-4 text-left">Author</th>
-        <th className="py-3 px-4 text-left">Category</th>
-        <th className="py-3 px-4 text-left">Price</th>
-        <th className="py-3 px-4 text-left">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {loading ? (
-        <tr>
-          <td colSpan={6} className="text-center py-6">
-            Loading...
-          </td>
-        </tr>
-      ) : (
-        currentProducts?.map((product) => (
-          <tr key={product?._id} className="hover:bg-gray-100">
-            <td className="py-3 px-4">
-              <img
-                src={product?.image}
-                alt={product?.name}
-                className="w-16 h-16 object-cover rounded-md"
-              />
-            </td>
-            <td className="py-3 px-4">{product?.name}</td>
-            <td className="py-3 px-4">{product?.author}</td>
-            <td className="py-3 px-4">{product?.category}</td>
-            <td className="py-3 px-4">${product?.price}</td>
-            <td className="py-3 px-4 flex gap-2">
-              <button
-                onClick={() => handleEditClick(product)}
-                className="text-blue-500 hover:text-blue-600"
-              >
-                <CiEdit />
-              </button>
-              <button
-                onClick={() => handleDeleteProduct(product._id)}
-                className="text-red-500 hover:text-red-600"
-              >
-                <MdDelete />
-              </button>
-            </td>
-          </tr>
-        ))
-      )}
-    </tbody>
-  </table>
-</div>
+            <table className="min-w-full table-auto">
+              <thead className="bg-gray-200 text-gray-600">
+                <tr>
+                  <th className="py-3 px-4 text-left">Image</th>
+                  <th className="py-3 px-4 text-left">Name</th>
+                  <th className="py-3 px-4 text-left">Author</th>
+                  <th className="py-3 px-4 text-left">Category</th>
+                  <th className="py-3 px-4 text-left">Price</th>
+                  <th className="py-3 px-4 text-left">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {loading ? (
+                  <tr>
+                    <td colSpan={6} className="text-center py-6">
+                      Loading...
+                    </td>
+                  </tr>
+                ) : (
+                  currentProducts.map((product) => (
+                    <tr key={product._id} className="hover:bg-gray-100">
+                      <td className="py-3 px-4">
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          className="w-16 h-16 object-cover rounded-md"
+                        />
+                      </td>
+                      <td className="py-3 px-4">{product.name}</td>
+                      <td className="py-3 px-4">{product.author}</td>
+                      <td className="py-3 px-4">{product.category}</td>
+                      <td className="py-3 px-4">${product.price}</td>
+                      <td className="py-3 px-4 flex gap-2">
+                        <button
+                          onClick={() => handleEditClick(product)}
+                          className="text-blue-500 hover:text-blue-600"
+                        >
+                          <CiEdit />
+                        </button>
+                        <button
+                          onClick={() => setConfirmDelete(product._id)}
+                          className="text-red-500 hover:text-red-600"
+                        >
+                          <MdDelete />
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
 
+          {/* Confirmation Box */}
+          {confirmDelete && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+              <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm">
+                <h2 className="text-lg font-semibold text-gray-800 mb-4">
+                  Are you sure you want to delete this product?
+                </h2>
+                <div className="flex gap-4">
+                  <button
+                    onClick={handleDeleteProduct}
+                    className="bg-red-600 text-white px-4 py-2 rounded-md"
+                  >
+                    Delete
+                  </button>
+                  <button
+                    onClick={() => setConfirmDelete(null)}
+                    className="bg-gray-400 text-white px-4 py-2 rounded-md"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Pagination */}
           <div className="flex justify-center mt-4">
@@ -243,7 +299,7 @@ function ProductSection() {
                 </div>
                 <div className="p-4">
                   <form className="space-y-4">
-                    {[ "name", "description", "category", "price", "image", "author",].map((field) => (
+                    {["name", "description", "category", "price", "image", "author"].map((field) => (
                       <div key={field}>
                         <label className="block text-sm font-medium text-gray-700 capitalize">
                           {field}
