@@ -1,12 +1,14 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
+
 
 function AdminNavbar() {
     const [isMenuopen,setIsmenuopen] = useState(false);
+  
 
     function togleMenu(){
        setIsmenuopen(isMenuopen)
     }
-
+   
   return (
     <div>
          <nav className="bg-sky-950 border-gray-200 dark:bg-gray-900">
@@ -56,8 +58,7 @@ function AdminNavbar() {
             </svg>
           </button>
         </div>
-    
-      </div>
+       </div>
     </nav>
       
     </div>

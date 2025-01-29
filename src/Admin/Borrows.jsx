@@ -74,6 +74,7 @@ function Borrows() {
                             />
                             <div>
                               <p className="text-gray-800 font-medium">{product.name}</p>
+                               <p className="text-gray-800 font-medium">by {product.author}</p>
                               <p className="text-sm text-gray-500">
                                 ${product.price} - {product.category}
                               </p>
@@ -88,7 +89,7 @@ function Borrows() {
       className="flex gap-4 items-start mb-3 border-b pb-2 last:border-none"
     >
       <div className="flex-1">
-        <p className="text-gray-800 font-medium">Name: {user.name || 'N/A'}</p>
+        <p className="text-gray-800 font-semibold">Name: {user.username || 'N/A'}</p>
         <p className="text-gray-600">Email: {user.email}</p>
         <p className="text-gray-600">
           Membership: {user.membershipStatus || 'Not available'}
@@ -106,13 +107,25 @@ function Borrows() {
                       </p>
                     </div>
                     <div>
-                      <p className="text-base font-medium text-gray-600 mb-1">Start Date:</p>
-                      <p className="text-sm text-gray-700">
-                        {new Date(borrow.startDate).toLocaleDateString()}
+                        <p className="text-sm text-gray-700">
+                       Status: {borrow.status}
+                      </p>
+                       <p className="text-sm text-gray-700">
+                       Fine:${borrow.fine}
                       </p>
                       <p className="text-sm text-gray-700">
+                       Start Date: {new Date(borrow.borrowDate).toLocaleDateString()}
+                      </p>
+                       <p className="text-sm text-gray-700">
+                       End Date: {new Date(borrow.dueDate).toLocaleDateString()}
+                      </p>
+                      <p className="text-sm text-gray-700">
+                       Return Date: {new Date(borrow.returnDate).toLocaleDateString()}
+                      </p>
+
+                      {/* <p className="text-sm text-gray-700">
                         {borrow.city}, {borrow.state}, {borrow.zipcode}
-                      </p>
+                      </p> */}
                     </div>
                   </div>
                 </div>

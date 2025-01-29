@@ -49,7 +49,7 @@ function Childrens() {
       }
   
       await axios.post(`http://localhost:3000/api/users/${userId}/borrow/${productId}`);
-      toast.success('Product Borrowed Successfully');
+      toast.success('Product Added in Borrows');
       updateProductStatus(productId, true); // Update local product status
   
       // Optionally, refresh the product list from the server if needed
@@ -80,7 +80,7 @@ function Childrens() {
       }
 
       await axios.post(`http://localhost:3000/api/users/${userId}/unborrow/${productId}`);
-      toast.success('Product Returned Successfully');
+      toast.success('Product unborrowed Successfully');
       updateProductStatus(productId, false); // Update local product status
     } catch (error) {
       toast.error('Error returning the product');

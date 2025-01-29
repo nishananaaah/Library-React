@@ -46,7 +46,7 @@ function BookDetailPage() {
         }
 
         await axios.post(`http://localhost:3000/api/users/${userId}/borrow/${productId}`);
-        toast.success("Product Borrowed Successfully");
+        toast.success('Product Added in Borrows');
     } catch (error) {
         toast.error("Take Membership");
         console.error("Error borrowing product:", error);

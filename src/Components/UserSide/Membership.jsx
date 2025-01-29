@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import Navbar2 from "./Navbar2";
 import Footer from "./Footer";
@@ -11,24 +11,23 @@ function Membership() {
   const userId = JSON.parse(localStorage.getItem("user"))?._id;
   const userName = JSON.parse(localStorage.getItem("user"))?.username;
   const token = localStorage.getItem("token");
-  const [membership,setMembership] = useState([])
+  const [membership, setMembership] = useState([]);
 
+  useEffect(() => {
+    const fetchMembership = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/api/users/getmembership");
+        setMembership(response.data);
+      } catch (error) {
+        console.log("Failed to fetch membership", error);
+        toast.error("Failed to load Membership");
+      }
+    };
+    fetchMembership();
+  }, []);
 
-  useEffect(()=>{
-
-const fetchmembership = async()=>{
-  try {
-    const response = await axios.get('http://localhost:3000/api/users/getmembership')
-    setMembership(response.data)
-  } catch (error) {
-    console.log("failed to fetch membership",error)
-    toast.error("Membership")
-    
-  }
-}
-fetchmembership()
- },[])
-
+  // Membership background colors
+  const membershipColors = ["bg-gray-300", "bg-yellow-300","bg-blue-300"];
 
   // Razorpay Payment Handler
   const handlePayment = async (membership) => {
@@ -48,7 +47,6 @@ fetchmembership()
     }
 
     try {
-      // Initiate order on the server
       const { data } = await axios.post(
         `http://localhost:3000/api/users/payment/${userId}`,
         { amount: membership.price },
@@ -56,7 +54,7 @@ fetchmembership()
       );
 
       const options = {
-        key: "rzp_test_0wgyeuQHj6FA1r", // Replace with your Razorpay API Key
+        key: "rzp_test_0wgyeuQHj6FA1r",
         amount: data.amount,
         currency: data.currency,
         name: "BOOKRED",
@@ -70,7 +68,6 @@ fetchmembership()
             razorpay_signature: response.razorpay_signature,
           };
 
-          // Verify payment on the server
           try {
             await axios.post(
               `http://localhost:3000/api/users/memberpayment`,
@@ -109,7 +106,7 @@ fetchmembership()
           {membership.map((membership, index) => (
             <div
               key={index}
-              className={`${membership.bgColor} p-8 rounded-2xl shadow-2xl transform transition duration-300 hover:scale-105 hover:shadow-xl`}
+              className={`${membershipColors[index % membershipColors.length]} p-8 rounded-2xl shadow-2xl transform transition duration-300 hover:scale-105 hover:shadow-xl`}
             >
               <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
                 {membership.name}
@@ -143,4 +140,5 @@ fetchmembership()
 }
 
 export default Membership;
+
 

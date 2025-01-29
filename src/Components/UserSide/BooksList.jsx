@@ -44,7 +44,7 @@ function BooksList() {
       }
 
       await axios.post(`http://localhost:3000/api/users/${userId}/borrow/${productId}`);
-      toast.success("Product Borrowed Successfully");
+      toast.success('Product Added in Borrows');
       updateProductStatus(productId, true);
     } catch (error) {
       toast.error("Take Membership");
@@ -69,7 +69,7 @@ function BooksList() {
       }
 
       await axios.post(`http://localhost:3000/api/users/${userId}/unborrow/${productId}`);
-      toast.success("Product Returned Successfully");
+      toast.success("Product unborrowed Successfully");
       updateProductStatus(productId, false);
     } catch (error) {
       toast.error("Error returning the product");

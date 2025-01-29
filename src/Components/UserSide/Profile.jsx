@@ -5,9 +5,11 @@ import Footer from './Footer';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import axios from 'axios';
+import { FaPencilAlt } from "react-icons/fa";
 
 function Profile() {
   const [borrows, setBorrows] = useState([]);
+  const [reviews,setReviews] = useState([])
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(6);
   const user = JSON.parse(localStorage.getItem('user'));
@@ -58,10 +60,31 @@ function Profile() {
     toast.success('Logout Successfully');
   };
 
-const handleConfirm = () =>{
-    navigate('/')
-    toast.success("Borrow Confirmed Successfully")
-}
+  const handleConfirm = () => {
+    toast.success('Borrow Confirmed Successfully');
+    navigate('/');
+  };
+
+  const handleReturn = async (borrowId, productId) => {
+    try {
+      await axios.post(`http://localhost:3000/api/users/${userId}/return/${productId}`);
+      toast.success('Product returned successfully.');
+      // Refresh borrows after return
+      setBorrows((prevBorrows) => prevBorrows.filter((b) => b._id !== borrowId));
+    } catch (error) {
+      console.error('Failed to return product:', error);
+      toast.error('Failed to return product.');
+    }
+  };
+  const handleReview = async(productId)=>{
+    try {
+      await axios.post(`http://localhost:3000/api/users/${userId}/review/${productId}`)
+       toast.success("Review Added Successfully")
+    } catch (error) {
+      console.log("Failed to add reviews",error)
+      toast.error("Failed to Add reviews")
+    }
+  }
 
   return (
     <main className="flex-1 bg-gray-100">
@@ -82,7 +105,7 @@ const handleConfirm = () =>{
               <h1 className="text-2xl font-semibold text-gray-800">{user.username || 'John Doe'}</h1>
               <p className="text-gray-600 mt-2">Email: {user.email || 'user@example.com'}</p>
               <p className="text-gray-600">Total Borrows: {borrows.length}</p>
-              <p className="text-gray-600">Membership Status:Gold</p>
+              <p className="text-gray-600">Membership Status: Gold</p>
             </div>
           </div>
         </div>
@@ -110,13 +133,29 @@ const handleConfirm = () =>{
                     </div>
                   ))}
                 </div>
-                <p className="mt-4 text-gray-700">Fine:${borrow.fine}</p>
+                <p className="mt-4 text-gray-700">Fine: ${borrow.fine}</p>
                 <p className="text-gray-700">
                   Start Date: {new Date(borrow.borrowDate).toLocaleDateString()}
                 </p>
                 <p className="text-gray-700">
-                  Return Date: {new Date(borrow.dueDate).toLocaleDateString()}
+                  End Date: {new Date(borrow.dueDate).toLocaleDateString()}
                 </p>
+                <p className="text-gray-700">
+                  Return Date: {new Date(borrow.returnDate).toLocaleDateString()}
+                </p>
+                <p className="text-gray-700">Status: {borrow.status}</p>
+                <button
+                  onClick={() => handleReturn(borrow._id, borrow.productId[0]?._id)}
+                  className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700"
+                >
+                  Return Product
+                </button>
+                <button
+            onClick={handleReview}
+            className="px-4 py-2 text-black rounded-lg shadow-md m-2"
+          >
+           <FaPencilAlt />
+          </button>
               </div>
             ))}
           </div>
@@ -194,7 +233,10 @@ const handleConfirm = () =>{
           >
             Logout
           </button>
-          <button onClick={handleConfirm} className="px-6 py-3 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700">
+          <button
+            onClick={handleConfirm}
+            className="px-6 py-3 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700"
+          >
             Confirm Borrowing
           </button>
         </div>

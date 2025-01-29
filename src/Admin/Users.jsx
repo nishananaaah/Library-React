@@ -9,6 +9,9 @@ function Users() {
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 5;
+  const userss = JSON.parse(localStorage.getItem('user'));
+  console.log(users,'ffffff');
+  
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -69,6 +72,7 @@ function Users() {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead>
                   <tr>
+                  <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase">Image</th>
                     <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase">Username</th>
                     <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase">Email</th>
                     <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase">Actions</th>
@@ -76,16 +80,23 @@ function Users() {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {currentUsers.length > 0 ? (
-                    currentUsers.map((user) => (
+                    currentUsers?.map((user) => (
                       <tr key={user._id} className="hover:bg-gray-50 transition-colors">
-                        <td className="px-6 py-4 text-sm text-gray-900">{user.username}</td>
-                        <td className="px-6 py-4 text-sm text-gray-900">{user.email}</td>
+                         <td className="py-3 px-4">
+                        <img
+                          src={userss?.image}
+                          alt={userss?.username}
+                          className="w-16 h-16 object-cover rounded-md"
+                        />
+                      </td>
+                        <td className="px-6 py-4 text-sm text-gray-900">{user?.username}</td>
+                        <td className="px-6 py-4 text-sm text-gray-900">{user?.email}</td>
                         <td className="px-6 py-4 text-sm text-gray-900">
                           <Link to={`/users/${user._id}`} className="text-blue-500 hover:underline mr-4">
                             View Details
                           </Link>
                           <button
-                            onClick={() => handleUser(user._id, user.isDeleted)}
+                            onClick={() => handleUser(user?._id, user?.isDeleted)}
                             className={`px-4 py-2 rounded-md shadow-md focus:outline-none focus:ring-2 ${
                               user.isDeleted
                                 ? 'bg-green-500 text-white hover:bg-green-600 focus:ring-green-500'

@@ -1,14 +1,18 @@
-import React, { useEffect, useState } from 'react'
+import  { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import AdminNavbar from './AdminNavbar';
 import Sidebar from './Sidebar';
-import { FaShoppingCart } from 'react-icons/fa';
+import { toast } from 'sonner';
 
 function UserDetails() {
     const {userid} = useParams();
     const [user,setUser] = useState(null);
     const [loading,setLoading] = useState(true);
+    const [borrows,setBorrows] = useState([]);
+    const userss = JSON.parse(localStorage.getItem('user'));
+    const userId = userss?._id;
+    
     
 
 
@@ -28,6 +32,20 @@ function UserDetails() {
         }
         fetchUserdetails()
     },[userid])
+
+    useEffect(()=>{
+      const fetchBorrows = async()=>{
+        try {
+          const response = await axios.get(`http://localhost:3000/api/users/borrow/${userId}`)
+           setBorrows(response?.data.borrows)
+        } catch (error) {
+         console.log("failed to fetch borrows",error)
+         toast.error("Failed to load borrows")
+          
+        }
+      }
+      fetchBorrows();
+    },[userId])
     
 
     if (loading) return <p>Loading...</p>;
@@ -43,29 +61,37 @@ function UserDetails() {
           <div className="bg-white shadow-lg rounded-lg p-8 max-w-4xl mx-auto">
             <h1 className="text-3xl font-extrabold text-gray-900 mb-8">User Details</h1>
 
-            <div className="border-b border-gray-200 pb-6 mb-6">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-2">User ID: {user._id}</h2>
-              <p className="text-lg text-gray-700 mb-1"><strong>Username:</strong> {user.username}</p>
-              <p className="text-lg text-gray-700 mb-1"><strong>Email:</strong> {user.email}</p>
-            </div>
+            <div className="border border-gray-200 rounded-lg shadow-lg p-6 bg-white">
+  {/* User Image */}
+  <div className="relative mx-auto w-28 h-28 rounded-full overflow-hidden border-4 shadow-lg">
+    <img
+      src={userss.image || '/default-avatar.png'}
+      alt="User Avatar"
+      className="w-full h-full object-cover"
+    />
+  </div>
 
-            {/* <section className="mb-8">
-              <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                <FaShoppingCart className="mr-2 text-gray-600" /> Cart Items
-              </h3>
-              {user?.length > 0 ? (
-                <ul className="list-disc pl-5 space-y-2">
-                  {user.map((item) => (
-                    <li key={item._id} className="flex items-center text-gray-600">
-                      <FaShoppingCart className="mr-2 text-gray-400" />
-                      {item?.productId?.name} (${item?.productId?.price.toFixed(2)}) - Quantity: {item?.quantity}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="text-gray-500">No items in cart.</p>
-              )}
-            </section> */}
+  {/* User Details */}
+  <div className="text-center mt-6">
+    <h2 className="text-2xl font-bold text-gray-800 mb-2">{user.username}</h2>
+    <p className="text-sm text-gray-600 italic mb-4">{user.email}</p>
+    <div className="bg-indigo-100 text-indigo-800 text-sm font-medium rounded-full px-4 py-1 inline-block">
+      Membership Status: Active
+    </div>
+  </div>
+
+  {/* Stats */}
+  <div className="mt-6 grid grid-cols-2 gap-4 text-center">
+    <div className="bg-gray-100 p-4 rounded-lg shadow-sm">
+      <p className="text-lg font-bold text-gray-800">{borrows?.length}</p>
+      <p className="text-sm text-gray-600">Total Borrows</p>
+    </div>
+    <div className="bg-gray-100 p-4 rounded-lg shadow-sm">
+      <p className="text-lg font-bold text-gray-800">Active</p>
+      <p className="text-sm text-gray-600">Membership</p>
+    </div>
+  </div>
+</div>
           </div>
         </main>
       </div>
