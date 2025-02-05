@@ -52,30 +52,30 @@ function BooksList() {
     }
   };
 
-  const handleUnborrow = async (productId) => {
-    try {
-      const id = localStorage.getItem("user");
-      if (!id) {
-        toast.error("User is not logged in. Please login!");
-        return;
-      }
+  // const handleUnborrow = async (productId) => {
+  //   try {
+  //     const id = localStorage.getItem("user");
+  //     if (!id) {
+  //       toast.error("User is not logged in. Please login!");
+  //       return;
+  //     }
 
-      const user = JSON.parse(id);
-      const userId = user._id;
+  //     const user = JSON.parse(id);
+  //     const userId = user._id;
 
-      if (!userId) {
-        toast.error("User ID is invalid");
-        return;
-      }
+  //     if (!userId) {
+  //       toast.error("User ID is invalid");
+  //       return;
+  //     }
 
-      await axios.post(`http://localhost:3000/api/users/${userId}/unborrow/${productId}`);
-      toast.success("Product unborrowed Successfully");
-      updateProductStatus(productId, false);
-    } catch (error) {
-      toast.error("Error returning the product");
-      console.error("Error unborrowing product:", error);
-    }
-  };
+  //     await axios.post(`http://localhost:3000/api/users/${userId}/unborrow/${productId}`);
+  //     toast.success("Product unborrowed Successfully");
+  //     updateProductStatus(productId, false);
+  //   } catch (error) {
+  //     toast.error("Error returning the product");
+  //     console.error("Error unborrowing product:", error);
+  //   }
+  // };
 
   const updateProductStatus = (productId, isBorrowed) => {
     setProducts((prevProducts) =>
@@ -109,24 +109,25 @@ function BooksList() {
                   onClick={() => navigate(`/detail/${item._id}`)}
                 />
               </div>
+              
               {/* Borrow and Unborrow Buttons */}
               <div className="p-3 text-center">
                 {item.isBorrowed ? (
                   <>
-                    <p className="text-red-500 font-bold mb-2">Not Available</p>
+                    {/* <p className="text-red-500 font-bold mb-2">Not Available</p>
                     <button
                       onClick={() => handleUnborrow(item._id)}
                       className="bg-red-500 text-white font-bold py-2 px-4 rounded shadow-lg hover:bg-red-700 transition duration-200 transform hover:scale-105"
                     >
                       UNBORROW
-                    </button>
+                    </button> */}
                   </>
                 ) : (
                   <button
                     onClick={() => handleBorrow(item._id)}
                     className="bg-sky-950 text-white font-bold py-2 px-4 rounded shadow-lg hover:bg-sky-800 transition duration-200 transform hover:scale-105"
                   >
-                    BORROW
+                    <a href={item.pdfUrl} target="self">READ</a>
                   </button>
                 )}
               </div>

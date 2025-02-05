@@ -31,7 +31,7 @@ const navigate = useNavigate()
                             </li>
                             <li className="my-2">
                                 <Link to="/productsection" className="flex items-center gap-2 p-2 rounded hover:bg-gray-400">
-                                    <MdOutlineProductionQuantityLimits size={20} />
+                                    <FaBook size={20} />
                                     <span>BOOKS</span>
                                 </Link>
                             </li>
@@ -49,7 +49,7 @@ const navigate = useNavigate()
                             </li>
                             <li className="my-2">
                                 <Link to="/borrows" className="flex items-center gap-2 p-2 rounded hover:bg-gray-400">
-                                    <FaBook size={20} />
+                                    <MdOutlineProductionQuantityLimits size={20} />
                                     <span>BORROWS</span>
                                 </Link>
                             </li>

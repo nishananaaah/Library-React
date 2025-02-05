@@ -28,6 +28,7 @@ import Profile from './Components/UserSide/Profile'
 import UserBorrows from './Components/UserSide/UserBorrows'
 import About from './Components/UserSide/About'
 import Contact from './Components/UserSide/Contact'
+import GoogleLogin from './Components/UserSide/GoogleLogin'
 
 
 
@@ -66,7 +67,7 @@ function App() {
       <Route  path='contact' element={<Contact/>}/>
 
     </Routes>
-
+    
    
     
    
